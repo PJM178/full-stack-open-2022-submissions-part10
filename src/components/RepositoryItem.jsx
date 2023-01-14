@@ -1,15 +1,62 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import Constants from 'expo-constants';
+
+import theme from '../theme';
+
+import RepositoryItemDescription from './RepositoryItemDescription';
+import RepositoryItemAvatar from './RepositoryItemAvatar';
+import RepositoryItemStats from './RepositoryItemStats';
+
+const styles = StyleSheet.create({
+  container: {
+    padding: Constants.statusBarHeight/4,
+    backgroundColor: 'white',
+  },
+  item: {
+    flexDirection: 'row',
+  },
+  descriptionComponent: {
+    container: {
+      marginLeft: Constants.statusBarHeight/4,
+    },
+    name: {
+      fontWeight: theme.repositoryItem.fontWeights.bold
+    },
+    language: {
+      container:{
+        backgroundColor: '#0366d6',
+        borderRadius: 5,
+      },
+      item: {
+        padding: Constants.statusBarHeight/8,
+        color: 'white',
+      },
+    },
+  },
+  statsComponent: {
+    container: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+    },
+    itemAmount: {
+      fontWeight: theme.repositoryItem.fontWeights.bold,
+    },
+    item: {
+      alignItems: 'center',
+    },
+  },
+});
 
 const RepositoryItem = ({ item }) => {
   return (
-    <View key={item.id}>
-      <Text>Full name: {item.fullName}</Text>
-      <Text>Description: {item.description}</Text>
-      <Text>Language: {item.language}</Text>
-      <Text>Stars: {item.stargazersCount}</Text>
-      <Text>Forks: {item.forksCount}</Text>
-      <Text>Reviews: {item.reviewCount}</Text>
-      <Text>Rating: {item.ratingAverage}</Text>
+    <View key={item.id} style={styles.container}>
+      <View style={styles.item}>
+        <RepositoryItemAvatar image={item.ownerAvatarUrl} />
+        <RepositoryItemDescription name={item.fullName} description={item.description} 
+          styles={styles.descriptionComponent} language={item.language} />
+      </View>
+      <RepositoryItemStats stars={item.stargazersCount} forks={item.forksCount} 
+        reviews={item.reviewCount} rating={item.ratingAverage} style={styles} />
     </View>
   );
 };

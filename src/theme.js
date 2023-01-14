@@ -1,5 +1,8 @@
+// bad theming, there should only be themes for colors, fonts, etc. that are used
+// throughout the app, not for individual components
+
 const theme = {
-  Appbar: {
+  appBar: {
     container: {
       colors: {
         background: '#24292e',
@@ -10,6 +13,11 @@ const theme = {
         primary: 'rgba(255, 255, 255, 1)'
       }
     }
+  },
+  repositoryItem: {
+    fontWeights: {
+      bold: '700',
+    },
   },
 };
 

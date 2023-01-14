@@ -7,10 +7,10 @@ import AppBarTab from './AppBarTab';
 const styles = StyleSheet.create({
   container: {
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: theme.Appbar.container.colors.background,
+    backgroundColor: theme.appBar.container.colors.background,
   },
   text: {
-    color: theme.Appbar.text.colors.primary,
+    color: theme.appBar.text.colors.primary,
     marginBottom: Constants.statusBarHeight/2,
     marginLeft: Constants.statusBarHeight/4,
   }
