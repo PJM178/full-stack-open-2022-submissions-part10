@@ -19,6 +19,9 @@ const theme = {
       bold: '700',
     },
   },
+  colors: {
+    mainBackground: '#e1e4e8',
+  },
 };
 
 export default theme;

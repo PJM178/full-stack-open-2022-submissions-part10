@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
 });
 
 const RepositoryItemAvatar = ({ image }) => {
-  console.log(image)
   return <Image style={styles.avatar} source={{uri: image,}}/>;
 };
 
