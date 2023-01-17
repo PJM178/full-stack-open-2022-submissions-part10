@@ -7,28 +7,15 @@ import Text from './Text';
 const styles = StyleSheet.create({
   errorText: {
     marginTop: 5,
+    marginBottom: 10,
+    marginLeft: 5,
+    color: 'red',
   },
 });
 
 const FormikTextInput = ({ name, ...props }) => {
   const [field, meta, helpers] = useField(name);
   const showError = meta.touched && meta.error;
-
-  if (name === 'password') {
-    return (
-      <>
-        <TextInput
-          onChangeText={value => helpers.setValue(value)}
-          onBlur={() => helpers.setTouched(true)}
-          value={field.value}
-          error={showError}
-          secureTextEntry={props.showPassword}
-          {...props}
-        />
-        {showError && <Text style={styles.errorText}>{meta.error}</Text>}
-      </>
-    );
-  }
 
   return (
     <>
@@ -37,6 +24,8 @@ const FormikTextInput = ({ name, ...props }) => {
         onBlur={() => helpers.setTouched(true)}
         value={field.value}
         error={showError}
+        secureTextEntry={name === 'password' ? props.showPassword : false}
+        errorColor={styles.errorText.color}
         {...props}
       />
       {showError && <Text style={styles.errorText}>{meta.error}</Text>}

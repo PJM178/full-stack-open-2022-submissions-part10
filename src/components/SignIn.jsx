@@ -3,6 +3,7 @@ import { Pressable, Text, View, StyleSheet } from "react-native";
 import FormikTextInput from "./FormikTextInput";
 import { Button } from "@react-native-material/core";
 import React, { useState } from "react";
+import * as yup from 'yup';
 
 const initialValues = {
   username: '',
@@ -22,6 +23,15 @@ const styles = StyleSheet.create({
   },
 });
 
+const validationSchema = yup.object().shape({
+  username: yup
+    .string()
+    .required('Username is required'),
+  password: yup
+    .string()
+    .required('Password is required'),
+});
+
 const SignInForm = ({ onSubmit, showPassword }) => {
   return(
     <View style={styles.container}>
@@ -33,11 +43,13 @@ const SignInForm = ({ onSubmit, showPassword }) => {
 }
 
 const SignIn = () => {
+  // just for testing toggling password visiblity
   const [showPassword, setShowPassword] = useState(true);
 
   const onSubmit = values => {
     const username = String(values.username);
     const password = String(values.password);
+    // just for testing toggling password visiblity, put elsewhere when in use
     setShowPassword(showPassword === true ? false : true);
 
     if (username && password) {
@@ -46,7 +58,7 @@ const SignIn = () => {
   };
 
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit}>
+    <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
       {({ handleSubmit }) => <SignInForm onSubmit={handleSubmit} showPassword={showPassword} />}
     </Formik>
   );
