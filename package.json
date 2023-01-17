@@ -12,8 +12,10 @@
   "dependencies": {
     "@expo/dev-server": "^0.1.120",
     "@expo/webpack-config": "^0.17.0",
+    "@react-native-material/core": "^1.3.7",
     "expo": "~46.0.19",
     "expo-status-bar": "~1.4.0",
+    "formik": "^2.2.9",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-native": "0.69.6",

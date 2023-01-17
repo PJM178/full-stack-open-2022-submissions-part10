@@ -31,6 +31,9 @@ const AppBar = () => {
         <Link to={'/signin'}>
           <AppBarTab style={styles.text} text={'sign in'}  />
         </Link>
+        <Link to={'/bmicalculator'}>
+          <AppBarTab style={styles.text} text={'BMI Calculator'}  />
+        </Link>
       </ScrollView>
     </View>
   );
