@@ -29,7 +29,7 @@ const AppBar = () => {
           <AppBarTab style={styles.text} text={'Repositories'}  />
         </Link>
         <Link to={'/signin'}>
-          <AppBarTab style={styles.text} text={'sign in'}  />
+          <AppBarTab style={styles.text} text={'Sign In'}  />
         </Link>
         <Link to={'/bmicalculator'}>
           <AppBarTab style={styles.text} text={'BMI Calculator'}  />
