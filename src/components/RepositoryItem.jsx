@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
   },
   item: {
     flexDirection: 'row',
+    color: 'green'
   },
   descriptionComponent: {
     container: {

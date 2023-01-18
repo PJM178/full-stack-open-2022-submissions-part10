@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+import Text from "./Text";
 
 const AppBarTab = ({ text, style }) => {
   return <Text style={style}>{text}</Text>;

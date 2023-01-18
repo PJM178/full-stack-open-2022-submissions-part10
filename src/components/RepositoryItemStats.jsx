@@ -1,5 +1,6 @@
-import { Text, View } from "react-native"
+import { View } from "react-native"
 
+import Text from "./Text";
 
 const RepositoryItemStats = ({ stars, forks, reviews, rating, style }) => {
   return (

@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { Route, Routes, Navigate } from 'react-router-native';
 
 import RepositoryList from './RepositoryList';
@@ -25,7 +25,6 @@ const Main = () => {
         <Route path='/signin' element={<SignIn />} exact />
         <Route path='/bmicalculator' element={<BodyMassIndexCalculator />} exact />
       </Routes>
-      
     </View>
   );
 };
