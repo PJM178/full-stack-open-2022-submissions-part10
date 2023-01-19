@@ -14,14 +14,15 @@ const styles = StyleSheet.create({
   },
   item: {
     flexDirection: 'row',
-    color: 'green'
+    color: 'green',
   },
   descriptionComponent: {
     container: {
       marginLeft: Constants.statusBarHeight/4,
+      flexShrink: 1,
     },
     name: {
-      fontWeight: theme.repositoryItem.fontWeights.bold
+      fontWeight: theme.repositoryItem.fontWeights.bold,
     },
     language: {
       container:{
