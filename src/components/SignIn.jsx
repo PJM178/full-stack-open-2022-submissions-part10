@@ -5,6 +5,8 @@ import { Button } from "@react-native-material/core";
 import React, { useState } from "react";
 import * as yup from 'yup';
 
+import useSignIn from '../hooks/useSignIn';
+
 const initialValues = {
   username: '',
   password: '',
@@ -22,6 +24,8 @@ const styles = StyleSheet.create({
     padding: 5,
   },
 });
+
+console.log(useSignIn.signIn)
 
 const validationSchema = yup.object().shape({
   username: yup
@@ -43,18 +47,24 @@ const SignInForm = ({ onSubmit, showPassword, passwordVisibilityToggle }) => {
 }
 
 const SignIn = () => {
+  const [signIn] = useSignIn();
   const [showPassword, setShowPassword] = useState(true);
 
   const passwordVisibilityToggle = () => {
     setShowPassword(showPassword === true ? false : true);
   };
 
-  const onSubmit = values => {
+  const onSubmit = async values => {
     const username = String(values.username);
     const password = String(values.password);
 
     if (username && password) {
-      console.log(values);
+      try {
+        const { data } = await signIn({ username, password });
+        console.log(data);
+      } catch (e) {
+        console.log(e,'error signing in');
+      }
     }
   };
 

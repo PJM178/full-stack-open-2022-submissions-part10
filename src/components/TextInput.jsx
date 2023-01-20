@@ -5,7 +5,6 @@ const styles = StyleSheet.create({});
 
 const TextInput = ({ style, error, ...props }) => {
   const textInputStyle = [style];
-  console.log(error)
   return <NativeTextInput variant='outlined' color={error === undefined || error === false ? 'primary' : props.errorColor} style={textInputStyle} {...props} />;
 };
 
