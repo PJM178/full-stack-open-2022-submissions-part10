@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FlatList, View, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, FlatList, View, StyleSheet, Text } from 'react-native';
 
 import RepositoryItem from './RepositoryItem';
 import useRepositories from '../hooks/useRepositories';
@@ -8,6 +8,11 @@ const styles = StyleSheet.create({
   separator: {
     height: 10,
   },
+});
+
+const activityIndicator = StyleSheet.create({
+  flex: 1/2,
+  justifyContent: 'center',
 });
 
 const ItemSeparator = () => <View style={styles.separator} />;
@@ -27,6 +32,13 @@ const RepositoryList = () => {
     );
   };
 
+  if (!repositories) {
+    return (
+      <View style={activityIndicator}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    )
+  }
   return (
     <FlatList
       data={repositoryNodes}

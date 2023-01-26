@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import * as yup from 'yup';
 
 import useSignIn from '../hooks/useSignIn';
+import AuthStorage from '../utils/authStorage';
 
 const initialValues = {
   username: '',
@@ -61,7 +62,17 @@ const SignIn = () => {
     if (username && password) {
       try {
         const { data } = await signIn({ username, password });
-        console.log(data);
+        console.log('sigin data: ',data);
+        const authUser = async () => {
+          const currentAuthToken = new AuthStorage('currentUser')
+          await currentAuthToken.setAccessToken(data.authenticate.accessToken);
+          const currentUser = await currentAuthToken.getAccessToken();
+          console.log(currentUser);
+          await currentAuthToken.removeAccessToken();
+          const currentUsers = await currentAuthToken.getAccessToken();
+          console.log(currentUsers);
+        }
+        authUser();
       } catch (e) {
         console.log(e,'error signing in');
       }
