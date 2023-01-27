@@ -3,6 +3,7 @@ import { Pressable, Text, View, StyleSheet, Platform } from "react-native";
 import FormikTextInput from "./FormikTextInput";
 import { Button } from "@react-native-material/core";
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-native';
 import * as yup from 'yup';
 
 import useSignIn from '../hooks/useSignIn';
@@ -48,6 +49,7 @@ const SignInForm = ({ onSubmit, showPassword, passwordVisibilityToggle }) => {
 }
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const [signIn] = useSignIn();
   const [showPassword, setShowPassword] = useState(true);
 
@@ -62,17 +64,8 @@ const SignIn = () => {
     if (username && password) {
       try {
         const { data } = await signIn({ username, password });
+        navigate('/');
         console.log('sigin data: ',data);
-        const authUser = async () => {
-          const currentAuthToken = new AuthStorage('currentUser')
-          await currentAuthToken.setAccessToken(data.authenticate.accessToken);
-          const currentUser = await currentAuthToken.getAccessToken();
-          console.log(currentUser);
-          await currentAuthToken.removeAccessToken();
-          const currentUsers = await currentAuthToken.getAccessToken();
-          console.log(currentUsers);
-        }
-        authUser();
       } catch (e) {
         console.log(e,'error signing in');
       }
