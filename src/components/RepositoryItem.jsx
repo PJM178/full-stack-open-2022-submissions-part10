@@ -1,5 +1,9 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { useNavigate, useParams } from 'react-router-native';
+import useRepository from '../hooks/useRepository';
 import Constants from 'expo-constants';
+import { Button } from "@react-native-material/core";
+import * as Linking from 'expo-linking';
 
 import theme from '../theme';
 
@@ -47,20 +51,59 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
   },
+  button: {
+    padding: 5,
+  }
 });
 
+
 const RepositoryItem = ({ item }) => {
-  return (
-    <View testID="repositoryItem" key={item.id} style={styles.container}>
-      <View style={styles.item}>
-        <RepositoryItemAvatar image={item.ownerAvatarUrl} />
-        <RepositoryItemDescription name={item.fullName} description={item.description} 
-          styles={styles.descriptionComponent} language={item.language} />
+  const { repositoryId } = useParams();
+  const navigate = useNavigate();
+
+  const handlePress = () => {
+    if (item !== undefined) {
+      navigate(`/${item.id}`)
+    }
+  };
+
+  if (item === undefined) {
+    const { repository, error, loading } = useRepository(repositoryId);
+    if (repository) {
+      const item = repository
+      return (
+        <View testID="repositoryItem" key={item.id} style={styles.container}>
+          <Pressable onPress={handlePress}>
+          <View style={styles.item}>
+            <RepositoryItemAvatar image={item.ownerAvatarUrl} />
+            <RepositoryItemDescription name={item.fullName} description={item.description} 
+              styles={styles.descriptionComponent} language={item.language} />
+          </View>
+          <RepositoryItemStats stars={item.stargazersCount} forks={item.forksCount} 
+            reviews={item.reviewCount} rating={item.ratingAverage} style={styles} />
+          </Pressable>
+          <View style={styles.button}>
+            <Button title="Open in GitHub" onPress={() => Linking.openURL(item.url)}/>
+          </View>
+          
+        </View>
+      );
+    }
+  } else {
+    return (
+      <View testID="repositoryItem" key={item.id} style={styles.container}>
+        <Pressable onPress={handlePress}>
+        <View style={styles.item}>
+          <RepositoryItemAvatar image={item.ownerAvatarUrl} />
+          <RepositoryItemDescription name={item.fullName} description={item.description} 
+            styles={styles.descriptionComponent} language={item.language} />
+        </View>
+        <RepositoryItemStats stars={item.stargazersCount} forks={item.forksCount} 
+          reviews={item.reviewCount} rating={item.ratingAverage} style={styles} />
+        </Pressable>
       </View>
-      <RepositoryItemStats stars={item.stargazersCount} forks={item.forksCount} 
-        reviews={item.reviewCount} rating={item.ratingAverage} style={styles} />
-    </View>
-  );
+    );
+  }
 };
 
 export default RepositoryItem;

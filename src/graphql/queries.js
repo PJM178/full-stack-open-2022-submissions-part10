@@ -23,3 +23,12 @@ export const GET_CURRENTUSER = gql`
     }
   }
 `
+
+export const GET_REPOSITORY = gql`
+  ${CORE_REPOSITORIES_FIELDS}
+  query ($repositoryId: ID!)  {
+    repository(id: $repositoryId) {
+      ...CoreRepositoriesFields
+    }
+}
+`

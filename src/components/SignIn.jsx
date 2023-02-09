@@ -38,7 +38,7 @@ const validationSchema = yup.object().shape({
     .required('Password is required'),
 });
 
-const SignInForm = ({ onSubmit, showPassword, passwordVisibilityToggle }) => {
+export const SignInForm = ({ onSubmit, showPassword, passwordVisibilityToggle }) => {
   return(
     <View style={styles.container}>
       <FormikTextInput name="username" placeholder="Username" style={styles.fields} />

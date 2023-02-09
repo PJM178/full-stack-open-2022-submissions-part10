@@ -1,6 +1,7 @@
 import { Text, TextInput, Pressable, View } from 'react-native';
 import { Formik, useField } from 'formik';
 import * as yup from 'yup';
+import { useParams } from 'react-router-native';
 
 import FormikTextInput from './FormikTextInput';
 
@@ -39,6 +40,8 @@ const validationSchema = yup.object().shape({
 });
 
 const BodyMassIndexCalculator = () => {
+  const { repositoryId } = useParams();
+  console.log('id from bmi', repositoryId);
   const onSubmit = values => {
     const mass = parseFloat(values.mass);
     const height = parseFloat(values.height);

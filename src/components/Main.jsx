@@ -6,6 +6,7 @@ import SignIn from './SignIn';
 import AppBar from './AppBar';
 import theme from '../theme';
 import BodyMassIndexCalculator from './BMICalculator';
+import RepositoryItem from './RepositoryItem';
 
 const styles = StyleSheet.create({
   container: {
@@ -20,6 +21,7 @@ const Main = () => {
     <View style={styles.container}>
       <AppBar />
       <Routes>
+        <Route path='/:repositoryId' element={<RepositoryItem />} />
         <Route path='/' element={<RepositoryList />} exact />
         <Route path='*' element={<Navigate to='/' replace />} />
         <Route path='/signin' element={<SignIn />} exact />
