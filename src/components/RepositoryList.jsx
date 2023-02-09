@@ -17,10 +17,8 @@ const activityIndicator = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const RepositoryList = () => {
-  const { repositories, error, loading } = useRepositories();
-
-   // Get the nodes from the edges array - "repositories" is 
+export const RepositoryListContainer = ({ repositories, error, loading }) => {
+  // Get the nodes from the edges array - "repositories" is 
   //  not defined before this is called hence the ternary
   const repositoryNodes = repositories
   ? repositories.edges.map(edge => edge.node)
@@ -48,6 +46,13 @@ const RepositoryList = () => {
       )}
     />
   );
+};
+
+const RepositoryList = () => {
+  const { repositories, error, loading } = useRepositories();
+
+
+  return <RepositoryListContainer repositories={repositories} error={error} loading={loading} />;
 };
 
 export default RepositoryList;

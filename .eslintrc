@@ -18,6 +18,6 @@
   },
   "rules": {
     "react/prop-types": "off",
-    "react/react-in-jsx-scope": "on"
+    "react/react-in-jsx-scope": "2"
   }
 }
