@@ -40,13 +40,20 @@ const AppBar = () => {
         <Link to={'/'}>
           <AppBarTab style={styles.text} text={'Repositories'}  />
         </Link>
+        
         {currentUser !== undefined && currentUser.me !== null
-          ? <Link onPress={handleLogOut}  to={'/'}>
+          ? <>
+            <Link to={'/review'}>
+              <AppBarTab style={styles.text} text={'Create a review'} />
+            </Link>
+            <Link onPress={handleLogOut}  to={'/'}>
               <AppBarTab style={styles.text} text={'Sign Out'}  />
             </Link>
+            </> 
           : <Link to={'/signin'}>
               <AppBarTab style={styles.text} text={'Sign In'}  />
             </Link>
+            
         }
         <Link to={'/bmicalculator'}>
           <AppBarTab style={styles.text} text={'BMI Calculator'}  />
