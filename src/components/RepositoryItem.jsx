@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
-import { Link, useNavigate, useParams, useLocation } from 'react-router-native';
-import useRepository from '../hooks/useRepository';
+import { View, Text, StyleSheet, Pressable, FlatList } from 'react-native';
+import { useNavigate, useParams, useLocation } from 'react-router-native';
+import useReviews from '../hooks/useReviews';
 import Constants from 'expo-constants';
 import { Button } from "@react-native-material/core";
+import { format } from 'date-fns';
 import * as Linking from 'expo-linking';
 
 import theme from '../theme';
@@ -12,9 +13,45 @@ import RepositoryItemAvatar from './RepositoryItemAvatar';
 import RepositoryItemStats from './RepositoryItemStats';
 
 const styles = StyleSheet.create({
+  singleRepository: {
+    marginBottom: 10,
+  },
+  separator: {
+    height: 10,
+  },
   container: {
     padding: Constants.statusBarHeight/4,
     backgroundColor: 'white',
+  },
+  reviewItemComponent : {
+    reviewItemContainer: {
+      padding: Constants.statusBarHeight/4,
+      backgroundColor: 'white',
+      flexDirection: 'row',
+    },
+    reviewItemRating: {
+      container: {
+        height: 50,
+        width: 50,
+        borderRadius: 50 / 2,
+        borderColor: 'blue',
+        borderWidth: 2,
+        marginRight: Constants.statusBarHeight/4,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      rating: {
+        fontWeight: '700',
+        color: 'blue',
+      }
+    },
+    reviewItemDate: {
+      opacity: 0.6,
+      marginBottom: 5,
+    },
+    reviewItemUser: {
+      fontWeight: theme.repositoryItem.fontWeights.bold,
+    },
   },
   item: {
     flexDirection: 'row',
@@ -60,71 +97,9 @@ const styles = StyleSheet.create({
   },
 });
 
+const ItemSeparator = () => <View style={styles.separator} />;
 
-const RepositoryItem = ({ item }) => {
-  // useLocation - a way to pass parameters with navigate()
-  const openGithub = item === undefined ? true : false;
-  const rep = item === undefined ? useLocation().state : item;
-  console.log(rep);
-  console.log('state from navigate',);
-  const { repositoryId } = useParams();
-  console.log(repositoryId);
-  const navigate = useNavigate();
- 
-  // const handlePress = () => {
-  //   if (item !== undefined) {
-  //     navigate(`/${item.id}`, { item: item });
-  //   }
-  // };
-
-  const handlePress = () => {
-    navigate(`/${rep.id}`, { state: rep });
-  };
-
-  // if (item === undefined) {
-  //   const { repository, error, loading } = useRepository(repositoryId);
-  //   if (!repository) {
-  //     return (
-  //       <View style={styles.activityIndicator}>
-  //         <ActivityIndicator size="large" color="#0000ff" />
-  //       </View>
-  //     )
-  //   } else {
-  //     const item = repository;
-  //     return (
-  //       <View testID="repositoryItem" key={item.id} style={styles.container}>
-  //         <Pressable onPress={handlePress}>
-  //         <View style={styles.item}>
-  //           <RepositoryItemAvatar image={item.ownerAvatarUrl} />
-  //           <RepositoryItemDescription name={item.fullName} description={item.description} 
-  //             styles={styles.descriptionComponent} language={item.language} />
-  //         </View>
-  //         <RepositoryItemStats stars={item.stargazersCount} forks={item.forksCount} 
-  //           reviews={item.reviewCount} rating={item.ratingAverage} style={styles} />
-  //         </Pressable>
-  //         <View style={styles.button}>
-  //           <Button title="Open in GitHub" onPress={() => Linking.openURL(item.url)}/>
-  //         </View>
-          
-  //       </View>
-  //     );
-  //   }
-  // } else {
-  //   return (
-  //     <View testID="repositoryItem" key={item.id} style={styles.container}>
-  //       <Pressable onPress={handlePress}>
-  //       <View style={styles.item}>
-  //         <RepositoryItemAvatar image={item.ownerAvatarUrl} />
-  //         <RepositoryItemDescription name={item.fullName} description={item.description} 
-  //           styles={styles.descriptionComponent} language={item.language} />
-  //       </View>
-  //       <RepositoryItemStats stars={item.stargazersCount} forks={item.forksCount} 
-  //         reviews={item.reviewCount} rating={item.ratingAverage} style={styles} />
-  //       </Pressable>
-  //     </View>
-  //   );
-  // }
-
+const RepositoryInfo = ({ rep, handlePress, openGithub }) => {
   return (
     <View testID="repositoryItem" key={rep.id} style={styles.container}>
       <Pressable onPress={handlePress}>
@@ -138,11 +113,61 @@ const RepositoryItem = ({ item }) => {
       </Pressable>
       {openGithub ? 
         <View style={styles.button}>
-          <Button title="Open in GitHub" onPress={() => Linking.openURL(item.url)}/>
+          <Button title="Open in GitHub" onPress={() => Linking.openURL(rep.url)}/>
         </View> :
         null
       }
     </View>
+  );
+};
+
+const ReviewItem = ({ review }) => {
+  return (
+    <View style={styles.reviewItemComponent.reviewItemContainer}>
+      <View style={styles.reviewItemComponent.reviewItemRating.container}>
+        <View >
+          <Text style={styles.reviewItemComponent.reviewItemRating.rating}>{review.rating}</Text>
+        </View>
+      </View>
+      <View style={{ flexShrink: 1 }}>
+        <View>
+          <Text style={styles.reviewItemComponent.reviewItemUser}>{review.user.username}</Text>
+          <Text style={styles.reviewItemComponent.reviewItemDate}>{format(new Date(review.createdAt), 'dd.MM.yyyy')}</Text>
+        </View>
+        <Text>{review.text}</Text>
+      </View>
+    </View>
+  );
+};
+
+const RepositoryItem = ({ item }) => {
+  // useLocation - a way to pass parameters with navigate()
+  const openGithub = item === undefined ? true : false;
+  const rep = item === undefined ? useLocation().state : item;
+  const { repositoryId } = useParams();
+  const navigate = useNavigate();
+ 
+  const { reviews, error, loading } = openGithub
+    ? useReviews(rep.id)
+    : [];
+
+  const reviewList = reviews
+    ? reviews.edges.map(edge => edge.node)
+    : [];
+
+  const handlePress = () => {
+    navigate(`/${rep.id}`, { state: rep });
+  };
+
+  return (
+    <FlatList
+      data={reviewList}
+      renderItem={({ item }) => <ReviewItem review={item} />}
+      keyExtractor={({ id }) => id}
+      ItemSeparatorComponent={ItemSeparator}
+      ListHeaderComponent={() => <RepositoryInfo rep={rep} handlePress={handlePress} openGithub={openGithub} />}
+      ListHeaderComponentStyle={openGithub && styles.singleRepository}
+    />
   );
 };
 

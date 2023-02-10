@@ -22,7 +22,7 @@ export const GET_CURRENTUSER = gql`
       username
     }
   }
-`
+`;
 
 export const GET_REPOSITORY = gql`
   ${CORE_REPOSITORIES_FIELDS}
@@ -30,5 +30,28 @@ export const GET_REPOSITORY = gql`
     repository(id: $repositoryId) {
       ...CoreRepositoriesFields
     }
+}
+`;
+
+export const GET_REVIEWS = gql`
+query Reviews($repositoryId: ID!) {
+  repository(id: $repositoryId) {
+    id
+    fullName
+    reviews {
+      edges {
+        node {
+          id
+          text
+          rating
+          createdAt
+          user {
+            id
+            username
+          }
+        }
+      }
+    }
+  }
 }
 `
