@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Pressable, FlatList } from 'react-native';
-import { useNavigate, useParams, useLocation } from 'react-router-native';
+import { View, Text, StyleSheet, Pressable, FlatList, ActivityIndicator } from 'react-native';
+import { useNavigate, useParams } from 'react-router-native';
 import useReviews from '../hooks/useReviews';
 import Constants from 'expo-constants';
 import { Button } from "@react-native-material/core";
@@ -11,6 +11,8 @@ import theme from '../theme';
 import RepositoryItemDescription from './RepositoryItemDescription';
 import RepositoryItemAvatar from './RepositoryItemAvatar';
 import RepositoryItemStats from './RepositoryItemStats';
+import { useState } from 'react';
+import useRepository from '../hooks/useRepository';
 
 const styles = StyleSheet.create({
   singleRepository: {
@@ -97,6 +99,12 @@ const styles = StyleSheet.create({
   },
 });
 
+const activityIndicator = StyleSheet.create({
+  flex: 1/2,
+  justifyContent: 'center',
+});
+
+
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const RepositoryInfo = ({ rep, handlePress, openGithub }) => {
@@ -142,11 +150,11 @@ const ReviewItem = ({ review }) => {
 
 const RepositoryItem = ({ item }) => {
   // useLocation - a way to pass parameters with navigate()
-  const openGithub = item === undefined ? true : false;
-  const rep = item === undefined ? useLocation().state : item;
   const { repositoryId } = useParams();
+  const openGithub = item === undefined ? true : false;
+  const rep = item === undefined ? useRepository(repositoryId) : item;
   const navigate = useNavigate();
- 
+
   const { reviews, error, loading } = openGithub
     ? useReviews(rep.id)
     : [];
@@ -158,6 +166,14 @@ const RepositoryItem = ({ item }) => {
   const handlePress = () => {
     navigate(`/${rep.id}`, { state: rep });
   };
+
+  if (loading) {
+    return (
+      <View style={activityIndicator}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    )
+  }
 
   return (
     <FlatList

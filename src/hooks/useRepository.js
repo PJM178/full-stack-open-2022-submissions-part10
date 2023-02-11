@@ -12,7 +12,7 @@ const useRepository = (repositoryId) => {
 
   const repository = data.repository;
 
-  return { repository };
+  return repository;
 };
 
 export default useRepository;
