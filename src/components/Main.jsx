@@ -8,6 +8,7 @@ import theme from '../theme';
 import BodyMassIndexCalculator from './BMICalculator';
 import RepositoryItem from './RepositoryItem';
 import ReviewForm from './ReviewForm';
+import SignUpForm from './SignUpForm';
 
 const styles = StyleSheet.create({
   container: {
@@ -22,6 +23,7 @@ const Main = () => {
     <View style={styles.container}>
       <AppBar />
       <Routes>
+        <Route path='/signup' element={<SignUpForm />} />
         <Route path='/review' element={<ReviewForm /> } />
         <Route path='/:repositoryId' element={<RepositoryItem />} />
         <Route path='/' element={<RepositoryList />} exact />

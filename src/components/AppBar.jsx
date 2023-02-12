@@ -50,10 +50,14 @@ const AppBar = () => {
               <AppBarTab style={styles.text} text={'Sign Out'}  />
             </Link>
             </> 
-          : <Link to={'/signin'}>
+          : <>
+            <Link to={'/signin'}>
               <AppBarTab style={styles.text} text={'Sign In'}  />
             </Link>
-            
+            <Link to={'/signup'}>
+              <AppBarTab style={styles.text} text={'Sign up'} />
+            </Link>
+            </>
         }
         <Link to={'/bmicalculator'}>
           <AppBarTab style={styles.text} text={'BMI Calculator'}  />
