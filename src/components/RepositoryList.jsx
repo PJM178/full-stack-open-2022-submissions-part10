@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ActivityIndicator, FlatList, View, StyleSheet, Text } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 
 import RepositoryItem from './RepositoryItem';
 import useRepositories from '../hooks/useRepositories';
@@ -17,7 +18,7 @@ const activityIndicator = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-export const RepositoryListContainer = ({ repositories, error, loading }) => {
+export const RepositoryListContainer = ({ selectedSort, setSelectedSort, repositories, error, loading }) => {
   // Get the nodes from the edges array - "repositories" is 
   //  not defined before this is called hence the ternary
   const repositoryNodes = repositories
@@ -44,15 +45,27 @@ export const RepositoryListContainer = ({ repositories, error, loading }) => {
       renderItem={({item}) => (
         <RepositoryItem item={item} />
       )}
+      ListHeaderComponent={
+        <Picker
+          selectedValue={selectedSort}
+          onValueChange={(itemValue, itemIndex) => 
+            setSelectedSort(itemValue)
+          }
+        >
+          <Picker.Item label="Latest repositories" value={{orderBy: "CREATED_AT", orderDirection: "ASC"}} />
+          <Picker.Item label="Highest rated repositories" value={{orderBy: "RATING_AVERAGE", orderDirection: "DESC"}} />
+          <Picker.Item label="Lowest rated repositories" value={{orderBy: "RATING_AVERAGE", orderDirection: "ASC"}} />
+        </Picker>
+      }
     />
   );
 };
 
 const RepositoryList = () => {
-  const { repositories, error, loading } = useRepositories();
+  const [selectedSort, setSelectedSort] = useState({orderBy: "CREATED_AT", orderDirection: "ASC"});
+  const { repositories, error, loading } = useRepositories(selectedSort);
 
-
-  return <RepositoryListContainer repositories={repositories} error={error} loading={loading} />;
+  return <RepositoryListContainer selectedSort={selectedSort} setSelectedSort={setSelectedSort} repositories={repositories} error={error} loading={loading} />;
 };
 
 export default RepositoryList;

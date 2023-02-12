@@ -4,8 +4,8 @@ import { CORE_REPOSITORIES_FIELDS } from './fragments';
 
 export const GET_REPOSITORIES = gql`
   ${CORE_REPOSITORIES_FIELDS}
-  query {
-    repositories {
+  query Repositories($orderBy: AllRepositoriesOrderBy, $orderDirection: OrderDirection) {
+    repositories(orderBy: $orderBy, orderDirection: $orderDirection) {
       edges {
         node {
           ...CoreRepositoriesFields
