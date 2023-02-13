@@ -24,9 +24,16 @@ import { GET_REPOSITORIES } from '../graphql/queries';
 // };
 
 // GraphQL
-const useRepositories = (selectedSort) => {
+const useRepositories = (searchKeyword, selectedSort) => {
+  const sort = [
+    {orderBy: "CREATED_AT", orderDirection: "ASC"},
+    {orderBy: "CREATED_AT", orderDirection: "ASC"},
+    {orderBy: "RATING_AVERAGE", orderDirection: "DESC"},
+    {orderBy: "RATING_AVERAGE", orderDirection: "ASC"},
+  ]
+
   const { loading, error, data } = useQuery(GET_REPOSITORIES, {
-    variables: { ...selectedSort },
+    variables: { searchKeyword: searchKeyword, ...sort[selectedSort] },
     fetchPolicy: 'cache-and-network'
   });
 

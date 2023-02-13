@@ -12,10 +12,10 @@ const QueryList = ({ setSelectedSort, selectedSort }) => {
       setSelectedSort(itemValue)
     }}
   >
-    <Picker.Item color='grey' label="Select an item..." value={"Select an item..."} />
-    <Picker.Item label="Latest repositories" value={{orderBy: "CREATED_AT", orderDirection: "ASC"}} />
-    <Picker.Item label="Highest rated repositories" value={{orderBy: "RATING_AVERAGE", orderDirection: "DESC"}} />
-    <Picker.Item label="Lowest rated repositories" value={{orderBy: "RATING_AVERAGE", orderDirection: "ASC"}} />
+    <Picker.Item enabled={false} color='grey' label="Select an item..." value={0} />
+    <Picker.Item label="Latest repositories" value={1} />
+    <Picker.Item label="Highest rated repositories" value={2} />
+    <Picker.Item label="Lowest rated repositories" value={3} />
   </Picker>
   );
 }
