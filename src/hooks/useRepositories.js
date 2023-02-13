@@ -25,7 +25,6 @@ import { GET_REPOSITORIES } from '../graphql/queries';
 
 // GraphQL
 const useRepositories = (selectedSort) => {
-  console.log('useREpositories hook', {...selectedSort});
   const { loading, error, data } = useQuery(GET_REPOSITORIES, {
     variables: { ...selectedSort },
     fetchPolicy: 'cache-and-network'
@@ -35,7 +34,7 @@ const useRepositories = (selectedSort) => {
   if (error) return { error };
 
   const repositories = data.repositories;
-  console.log(repositories)
+
   return { repositories };
 };
 

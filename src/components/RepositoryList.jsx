@@ -4,6 +4,7 @@ import {Picker} from '@react-native-picker/picker';
 
 import RepositoryItem from './RepositoryItem';
 import useRepositories from '../hooks/useRepositories';
+import QueryList from './QueryList';
 
 const styles = StyleSheet.create({
   separator: {
@@ -46,16 +47,7 @@ export const RepositoryListContainer = ({ selectedSort, setSelectedSort, reposit
         <RepositoryItem item={item} />
       )}
       ListHeaderComponent={
-        <Picker
-          selectedValue={selectedSort}
-          onValueChange={(itemValue, itemIndex) => 
-            setSelectedSort(itemValue)
-          }
-        >
-          <Picker.Item label="Latest repositories" value={{orderBy: "CREATED_AT", orderDirection: "ASC"}} />
-          <Picker.Item label="Highest rated repositories" value={{orderBy: "RATING_AVERAGE", orderDirection: "DESC"}} />
-          <Picker.Item label="Lowest rated repositories" value={{orderBy: "RATING_AVERAGE", orderDirection: "ASC"}} />
-        </Picker>
+        <QueryList selectedSort={selectedSort} setSelectedSort={setSelectedSort} />
       }
     />
   );
