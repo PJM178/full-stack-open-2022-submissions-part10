@@ -64,7 +64,7 @@ export class RepositoryListContainerTest extends React.Component {
   };
 
   render() {
-    const { repositories } = this.props;
+    const { repositories, onEndReach } = this.props;
 
     const repositoryNodes = repositories
       ? repositories.edges.map(edge => edge.node)
@@ -78,6 +78,8 @@ export class RepositoryListContainerTest extends React.Component {
           <RepositoryItem item={item} />
         )}
         ListHeaderComponent={this.renderHeader}
+        onEndReached={onEndReach}
+        // onEndReachedThreshold={0.5}
       />
     );
   }
@@ -86,18 +88,23 @@ export class RepositoryListContainerTest extends React.Component {
 const RepositoryList = () => {
   const [selectedSort, setSelectedSort] = useState(0);
   const [repFilter, setRepFilter] = useState('');
-  const { repositories, error, loading } = useRepositories(useDebounceDelay(repFilter), selectedSort);
+  const { repositories, error, loading, fetchMore } = useRepositories({ first: 6 }, useDebounceDelay(repFilter), selectedSort);
 
-  // return <RepositoryListContainer repFilter={repFilter} setRepFilter={setRepFilter} selectedSort={selectedSort} setSelectedSort={setSelectedSort} repositories={repositories} error={error} loading={loading} />;
+  const onEndReach = () => {
+    console.log('You have reached the end of the list');
+    fetchMore();
+  };
+
   return (
     <RepositoryListContainerTest 
-      repFilter={repFilter} 
-      setRepFilter={setRepFilter} 
-      selectedSort={selectedSort} 
-      setSelectedSort={setSelectedSort} 
-      repositories={repositories} 
-      error={error} 
-      loading={loading} 
+      repFilter={repFilter}
+      setRepFilter={setRepFilter}
+      selectedSort={selectedSort}
+      setSelectedSort={setSelectedSort}
+      repositories={repositories}
+      onEndReach={onEndReach}
+      error={error}
+      loading={loading}
     />
   );
 };

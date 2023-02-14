@@ -151,17 +151,23 @@ const ReviewItem = ({ review }) => {
 const RepositoryItem = ({ item }) => {
   // useLocation - a way to pass parameters with navigate()
   const { repositoryId } = useParams();
+  const reviewsToShow = 5;
   const openGithub = item === undefined ? true : false;
   const rep = item === undefined ? useRepository(repositoryId) : item;
   const navigate = useNavigate();
 
-  const { reviews, error, loading } = openGithub
-    ? useReviews(rep.id)
+  const { reviews, error, loading, fetchMore } = openGithub
+    ? useReviews({ reviewsFirst2: reviewsToShow }, rep.id)
     : [];
 
   const reviewList = reviews
     ? reviews.edges.map(edge => edge.node)
     : [];
+
+  const onEndReach = () => {
+    console.log('end of reviews');
+    fetchMore();
+  }
 
   const handlePress = () => {
     navigate(`/${rep.id}`, { state: rep });
@@ -183,6 +189,7 @@ const RepositoryItem = ({ item }) => {
       ItemSeparatorComponent={ItemSeparator}
       ListHeaderComponent={() => <RepositoryInfo rep={rep} handlePress={handlePress} openGithub={openGithub} />}
       ListHeaderComponentStyle={openGithub && styles.singleRepository}
+      onEndReached={onEndReach}
     />
   );
 };

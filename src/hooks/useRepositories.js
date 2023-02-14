@@ -24,7 +24,7 @@ import { GET_REPOSITORIES } from '../graphql/queries';
 // };
 
 // GraphQL
-const useRepositories = (searchKeyword, selectedSort) => {
+const useRepositories = (first , searchKeyword, selectedSort) => {
   const sort = [
     {orderBy: "CREATED_AT", orderDirection: "ASC"},
     {orderBy: "CREATED_AT", orderDirection: "ASC"},
@@ -32,17 +32,32 @@ const useRepositories = (searchKeyword, selectedSort) => {
     {orderBy: "RATING_AVERAGE", orderDirection: "ASC"},
   ]
 
-  const { loading, error, data } = useQuery(GET_REPOSITORIES, {
-    variables: { searchKeyword: searchKeyword, ...sort[selectedSort] },
+  const { loading, error, data, fetchMore } = useQuery(GET_REPOSITORIES, {
+    variables: { ...first, searchKeyword: searchKeyword, ...sort[selectedSort] },
     fetchPolicy: 'cache-and-network'
   });
-
+  console.log(data);
   if (loading) return { loading };
   if (error) return { error };
 
+  const handleFetchMore = () => {
+    const canFetchMore = !loading && data?.repositories.pageInfo.hasNextPage;
+
+    if (!canFetchMore) {
+      return;
+    }
+
+    fetchMore({
+      variables: {
+        after: data.repositories.pageInfo.endCursor,
+        // ...variables,
+      },
+    });
+  };
+
   const repositories = data.repositories;
 
-  return { repositories };
+  return { repositories, fetchMore: handleFetchMore, };
 };
 
 export default useRepositories;
