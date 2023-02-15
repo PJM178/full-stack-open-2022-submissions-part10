@@ -1,9 +1,12 @@
-import { FlatList, StyleSheet, View, Text, ActivityIndicator } from 'react-native';
+import { FlatList, StyleSheet, View, Text, ActivityIndicator, Alert } from 'react-native';
 import Constants from 'expo-constants';
 import theme from '../theme';
 import { format } from 'date-fns';
+import { Button } from '@react-native-material/core';
+import { useNavigate } from 'react-router-native';
 
 import userCurrentUserInfo from '../hooks/useCurrentUserInfo';
+import useDeleteReview from '../hooks/useDeleteReview';
 
 const styles = StyleSheet.create({
   singleRepository: {
@@ -82,7 +85,18 @@ const styles = StyleSheet.create({
     },
   },
   button: {
-    padding: 5,
+    container: {
+      flexDirection: 'row',
+      padding: 10,
+      justifyContent: 'space-around',
+    },
+    view: {
+      padding: 10,
+    },
+    delete: {
+      padding: 10,
+      backgroundColor: 'red',
+    },
   },
   activityIndicator: {
     flex: 1/2,
@@ -95,20 +109,46 @@ const activityIndicator = StyleSheet.create({
   justifyContent: 'center',
 });
 
-const ReviewItem = ({ review }) => {
+const ReviewItem = ({ review, refetch }) => {
+  const [deleteReview, error] = useDeleteReview();
+  const navigate = useNavigate();
+
+  if (error !== undefined) {
+    Alert.alert(`Something went wrong`, `${error}`, [
+      {
+        text: 'OK'
+      }
+    ])
+  }
+
+  const handleDeleteReview = async (id) => {
+    Alert.alert('Delete review', 'Are you sure you want to delete this review?', [
+      {text: 'Cancel'},
+      {text: 'Delete', onPress: async () => {await deleteReview(id), refetch();}}
+    ])
+    // await deleteReview(id);
+    // refetch();
+  }
+
   return (
-    <View style={styles.reviewItemComponent.reviewItemContainer}>
-      <View style={styles.reviewItemComponent.reviewItemRating.container}>
-        <View >
-          <Text style={styles.reviewItemComponent.reviewItemRating.rating}>{review.rating}</Text>
+    <View style={{ backgroundColor: 'white' }}>
+      <View style={styles.reviewItemComponent.reviewItemContainer}>
+        <View style={styles.reviewItemComponent.reviewItemRating.container}>
+          <View >
+            <Text style={styles.reviewItemComponent.reviewItemRating.rating}>{review.rating}</Text>
+          </View>
+        </View>
+        <View style={{ flexShrink: 1 }}>
+          <View>
+            <Text style={styles.reviewItemComponent.reviewItemUser}>{review.repository.fullName}</Text>
+            <Text style={styles.reviewItemComponent.reviewItemDate}>{format(new Date(review.createdAt), 'dd.MM.yyyy')}</Text>
+          </View>
+          <Text>{review.text}</Text>
         </View>
       </View>
-      <View style={{ flexShrink: 1 }}>
-        <View>
-          <Text style={styles.reviewItemComponent.reviewItemUser}>{review.repository.fullName}</Text>
-          <Text style={styles.reviewItemComponent.reviewItemDate}>{format(new Date(review.createdAt), 'dd.MM.yyyy')}</Text>
-        </View>
-        <Text>{review.text}</Text>
+      <View style={styles.button.container}>
+        <Button style={styles.button.view} title="View repository" onPress={() => navigate(`/${review.repository.id}`)} />
+        <Button style={styles.button.delete} title="Delete review" onPress={() => handleDeleteReview(review.id)} />
       </View>
     </View>
   );
@@ -117,11 +157,8 @@ const ReviewItem = ({ review }) => {
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const UserReviews = () => {
-  const { currentUser, loading, fetchMore } = userCurrentUserInfo(true, { reviewsFirst3: 8 });
+  const { currentUser, loading, fetchMore, refetch } = userCurrentUserInfo(true, { reviewsFirst3: 8 });
   
-  console.log('loading', loading);
-  console.log('userReviews component', currentUser);
-
   const reviewList = currentUser
   ? currentUser.me.reviews.edges.map(edge => edge.node)
   : [];
@@ -139,12 +176,10 @@ const UserReviews = () => {
     )
   }
 
-  console.log('reviewList', reviewList)
-
   return (
     <FlatList 
       data={reviewList}
-      renderItem={({ item }) => <ReviewItem review={item} />}
+      renderItem={({ item }) => <ReviewItem review={item} refetch={refetch} />}
       ItemSeparatorComponent={ItemSeparator}
       onEndReached={() => onEndReach()}
     />

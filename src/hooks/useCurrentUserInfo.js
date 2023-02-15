@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { GET_CURRENTUSER } from '../graphql/queries';
 
 const userCurrentUserInfo = (includeReviews, first) => {
-  const { loading, error, data, fetchMore } = useQuery(GET_CURRENTUSER, {
+  const { loading, error, data, fetchMore, refetch } = useQuery(GET_CURRENTUSER, {
     variables: { includeReviews: includeReviews, ...first },
     fetchPolicy: 'cache-and-network'
   });
@@ -26,7 +26,7 @@ const userCurrentUserInfo = (includeReviews, first) => {
 
   const currentUser = data;
 
-  return { currentUser, fetchMore: handleFetchMore };
+  return { currentUser, fetchMore: handleFetchMore, refetch };
 };
 
 export default userCurrentUserInfo;

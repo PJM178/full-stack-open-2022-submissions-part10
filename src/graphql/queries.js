@@ -52,6 +52,7 @@ export const GET_CURRENTUSER = gql`
             }
             repository {
               fullName
+              id
             }
           }
           cursor
