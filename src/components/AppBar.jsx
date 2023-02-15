@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 
 const AppBar = () => {
   const apolloClient = useApolloClient();
-  const { currentUser, error, loading } = useCurrentUserInfo();
+  const { currentUser, error, loading } = useCurrentUserInfo(false);
   const authStorage = useAuthStorage();
 
   const handleLogOut = async () => {
@@ -48,6 +48,9 @@ const AppBar = () => {
             </Link>
             <Link onPress={handleLogOut}  to={'/'}>
               <AppBarTab style={styles.text} text={'Sign Out'}  />
+            </Link>
+            <Link to={'/myreviews'}>
+              <AppBarTab style={styles.text} text={'My reviews'} />
             </Link>
             </> 
           : <>
